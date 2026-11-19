@@ -3,11 +3,19 @@ import Matrix2D from "./Matrix2D.js";
 export default class Automaton {
     constructor(
         rows, cols,
-        birth = new Set(),
-        survival = new Set()
+        birth = [],
+        survival = []
     ) {
-        this.birth = birth;
-        this.survival = survival;
+        this.birth = new Set();
+        this.survival = new Set();
+        
+        birth.forEach(n => {
+            this.birth.add(n);
+        });
+        survival.forEach(n => {
+            this.survival.add(n);
+        });
+
         this.matrix = new Matrix2D(rows, cols);
     }
 
@@ -16,10 +24,10 @@ export default class Automaton {
     }
 
     randomize(prob) {
-        for (let row = 0; row < this.matrix.rows; row++) {
-            for (let col = 0; col < this.matrix.cols; col++) {
+        for (let i = 0; i < this.matrix.rows; i++) {
+            for (let j = 0; j < this.matrix.cols; j++) {
                 if (Math.random() < prob) {
-                    this.matrix.set(row, col, 1);
+                    this.matrix.set(i, j, 1);
                 }
             }
         }
@@ -33,6 +41,12 @@ export default class Automaton {
         }
     }
 
+    /**
+     * Checks if the given cell survives, dies, or is born on the next generation
+     * @param {number} i cell row
+     * @param {number} j cell column
+     * @returns true if the cell is alive on the next generation, false otherwise
+     */
     checkCell(i, j) {
         const neighb = this.matrix.count(this.matrix.getNeighborsId(i, j), 1);
         if (this.matrix.get(i, j) === 1 && this.survival.has(neighb) || (this.matrix.get(i, j) === 0 && this.birth.has(neighb))) {
@@ -52,7 +66,6 @@ export default class Automaton {
             }
         }
         // console.log(nextGen);
-        this.matrix.grid = nextGen;
+        this.matrix.matrix = nextGen;
     }
 }
-

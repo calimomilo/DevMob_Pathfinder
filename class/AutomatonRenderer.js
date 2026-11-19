@@ -5,10 +5,10 @@ export default class AutomatonRenderer {
         width,
         height,
         pixelSize = 5,
-        aliveColor = "hsl(118, 44%, 60%)",
-        deadColor = "hsl(206, 70%, 10%)",
-        birth,
-        survival
+        aliveColor = "hsl(0, 0%, 100%)",
+        deadColor = "hsl(0, 0%, 0%)",
+        birth = [],
+        survival = []
     } = {}) {
     this.width = width;
     this.height = height;
@@ -19,7 +19,7 @@ export default class AutomatonRenderer {
     const rows = Math.floor(this.height/this.pixelSize);
     const cols = Math.floor(this.width/this.pixelSize);
 
-    console.log(rows, cols);
+    // console.log(rows, cols);
 
     this.automaton = new Automaton(rows, cols, birth, survival)
     }
