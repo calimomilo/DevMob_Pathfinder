@@ -1,4 +1,4 @@
-import AutomatonRenderer from "./class/AutomatonRenderer.js";
+import Automaton from "./class/Automaton.js";
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
@@ -9,7 +9,7 @@ ctx.canvas.height = ctx.canvas.clientHeight;
 const birth = [6, 7, 8];
 const survival = [3, 4, 5, 6, 7, 8];
 
-const stage = new AutomatonRenderer({
+const stage = new Automaton({
     width: ctx.canvas.width,
     height: ctx.canvas.height,
     pixelSize: 20,
@@ -19,9 +19,11 @@ const stage = new AutomatonRenderer({
     survival: survival
 });
 
-stage.automaton.randomize(0.55);
-for (let i = 0; i < 8; i++) {
-    stage.automaton.updateNextGen();
-    
+stage.randomize(0.55);
+// console.log(stage.getAutomaton());
+stage.render2D(ctx);
+
+for (let i = 1; i < 9; i++) {
+    stage.updateNextGen();
 }
 stage.render2D(ctx);
