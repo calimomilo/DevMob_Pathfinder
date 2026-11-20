@@ -4,15 +4,15 @@ export default class AutomatonWithPathfinding extends Automaton {
     getWalkableNeighbors({row, col}) {
         const indexes = [];
 
-        for (let i = -d; i <= d; i++) {
-            for (let j = -d; j <= d ; j++) {
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
                 if (!(i === 0 && j === 0)) {
                     // check inside of matrix bounds
                     if (row+i >= 0 && row+i <this.rows && col+j >= 0 && col+j <this.cols) {
                         // in case of corners
                         if (i !== 0 && j !== 0) {
                             // check corner and sides are free
-                            if (this.matrix[row+i][col+j] === this.matrix[row+i][row] === this.matrix[col][col+j] === 1) {
+                            if (this.matrix[row+i][col+j] === this.matrix[row+i][col] === this.matrix[row][col+j] === 1) {
                                 indexes.push({
                                     row: row+i,
                                     col: col+j
