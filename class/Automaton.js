@@ -68,6 +68,22 @@ export default class Automaton {
         }
     }
 
+    getRandomCell(val = false) {
+        const cell = {};
+
+        do {
+            const i = Math.floor(Math.random()*this.rows);
+            const j = Math.floor(Math.random()*this.cols);
+
+            cell.row = i;
+            cell.col = j;
+            
+            // console.log(i, j, this.matrix[i][j], val);
+        } while (val && this.matrix[cell.row][cell.col] !== val)
+        
+        return cell;
+    }
+
     toggleCell(i, j) {
         if (this.matrix[i][j] === 1) {
             this.matrix[i][j] = 0;
@@ -148,5 +164,13 @@ export default class Automaton {
                 ctx.closePath();                
             }
         }
+    }
+
+    drawCell(ctx, row, col, color) {
+        ctx.beginPath();
+        ctx.fillStyle = color;
+        ctx.rect(col*this.pixelSize, row*this.pixelSize, this.pixelSize, this.pixelSize);
+        ctx.fill();
+        ctx.closePath();
     }
 }

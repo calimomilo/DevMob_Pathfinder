@@ -23,7 +23,19 @@ stage.randomize(0.55);
 // console.log(stage.getAutomaton());
 stage.render2D(ctx);
 
-for (let i = 1; i < 9; i++) {
+for (let i = 0; i < 8; i++) {
+    // setTimeout(() => {
+    //     stage.updateNextGen();
+    //     stage.render2D(ctx);
+    // }, 100*i+300)
     stage.updateNextGen();
 }
 stage.render2D(ctx);
+
+const start = stage.getRandomCell(1);
+const end = stage.getRandomCell(1);
+
+console.log(start, end);
+
+stage.drawCell(ctx, start.row, start.col, '#36f1eb')
+stage.drawCell(ctx, end.row, end.col, '#db0202')
