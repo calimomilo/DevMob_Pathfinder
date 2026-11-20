@@ -1,4 +1,7 @@
 import Automaton from "./class/Automaton.js";
+import AutomatonWithPathfinding from "./class/AutomatonWithPathfinding.js";
+import Circle from "./class/Circle.js";
+import Vector2D from "./class/Vector2D.js";
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
@@ -9,7 +12,7 @@ ctx.canvas.height = ctx.canvas.clientHeight;
 const birth = [6, 7, 8];
 const survival = [3, 4, 5, 6, 7, 8];
 
-const stage = new Automaton({
+const stage = new AutomatonWithPathfinding({
     width: ctx.canvas.width,
     height: ctx.canvas.height,
     pixelSize: 20,
@@ -18,6 +21,8 @@ const stage = new Automaton({
     birth: birth,
     survival: survival
 });
+
+/* GENERATE WORLD */
 
 stage.randomize(0.55);
 // console.log(stage.getAutomaton());
@@ -32,10 +37,22 @@ for (let i = 0; i < 8; i++) {
 }
 stage.render2D(ctx);
 
-const start = stage.getRandomCell(1);
-const end = stage.getRandomCell(1);
+/* SELECT START AND END POINTS */
 
-console.log(start, end);
+const startCell = stage.getRandomCell(1);
+const endCell = stage.getRandomCell(1);
 
-stage.drawCell(ctx, start.row, start.col, '#36f1eb')
-stage.drawCell(ctx, end.row, end.col, '#db0202')
+const circle = new Circle({
+    pos: new Vector2D({
+        x: (startCell.col + 0.5) * stage.pixelSize,
+        y: (startCell.row + 0.5) * stage.pixelSize
+    }),
+    radius: Math.floor(stage.pixelSize*0.45),
+})
+console.log(circle);
+circle.draw(ctx);
+
+// stage.drawCell(ctx, startCell.row, startCell.col, '#36f1eb');
+stage.drawCell(ctx, endCell.row, endCell.col, '#db0202');
+
+/*  */
