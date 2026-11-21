@@ -1,6 +1,20 @@
 import Automaton from "./Automaton.js";
 
 export default class AutomatonWithPathfinding extends Automaton {
+    constructor({
+        width,
+        height,
+        pixelSize = 5,
+        freeColor = "hsl(0, 0%, 100%)",
+        wallColor = "hsl(0, 0%, 0%)",
+        inaccessibleColor = "hsl(0, 100%, 80%)",
+        birth = [],
+        survival = []
+    } = {}) {
+        super({width: width, height: height, pixelSize: pixelSize, aliveColor: freeColor, deadColor: wallColor, birth: birth, survival: survival});
+        this. inaccessibleColor = inaccessibleColor;
+    }
+
     getWalkableNeighbors({row, col}) {
         const indexes = [];
 
@@ -67,5 +81,24 @@ export default class AutomatonWithPathfinding extends Automaton {
 
     getFlowMap() {
         return this.flowMap ?? [];
+    }
+
+    addInaccessible({row, col}) {
+        this.flowFieldTo(row, col);
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j< this.cols; j++) {
+                if (!(i === row && j === col) && !this.flowMap[i][j] && this.matrix[i][j] === 1) {
+                    this.matrix[i][j] = -1;
+                }
+            }   
+        }
+    }
+    
+    render2D(ctx) {
+        for (let row = 0; row < this.rows; row++) {
+            for (let col = 0; col < this.cols; col++) {
+                this.drawCell(ctx, row, col, this.matrix[row][col] === 1? this.aliveColor : this.matrix[row][col] === -1? this.inaccessibleColor : this.deadColor);               
+            }
+        }
     }
 }

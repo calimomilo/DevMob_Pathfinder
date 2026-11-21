@@ -157,11 +157,7 @@ export default class Automaton {
     render2D(ctx) {
         for (let row = 0; row < this.rows; row++) {
             for (let col = 0; col < this.cols; col++) {
-                ctx.beginPath();
-                ctx.fillStyle = this.matrix[row][col] === 1? this.aliveColor : this.deadColor;
-                ctx.rect(col*this.pixelSize, row*this.pixelSize, this.pixelSize, this.pixelSize);
-                ctx.fill();
-                ctx.closePath();                
+                this.drawCell(ctx, row, col, this.matrix[row][col] === 1? this.aliveColor : this.deadColor);               
             }
         }
     }

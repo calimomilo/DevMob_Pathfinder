@@ -35,15 +35,16 @@ const stage = new AutomatonWithPathfinding({
     width: ctx.canvas.width,
     height: ctx.canvas.height,
     pixelSize: 10,
-    aliveColor: "hsl(206, 70%, 10%)",
-    deadColor: "hsl(118, 44%, 60%)",
+    freeColor: "hsl(206, 70%, 10%)",
+    wallColor: "hsl(118, 44%, 60%)",
+    inaccessibleColor: "hsl(205, 18%, 28%)",
     birth: birth,
     survival: survival
 });
 
 stage.randomize(0.55);
 // console.log(stage.getAutomaton());
-stage.render2D(ctx);
+// stage.render2D(ctx);
 
 for (let i = 0; i < 8; i++) {
     // setTimeout(() => {
@@ -52,9 +53,8 @@ for (let i = 0; i < 8; i++) {
     // }, 100*i+300)
     stage.updateNextGen();
 }
-stage.render2D(ctx);
 
-/* DRAW CIRCLE ON STARTING POINT */
+/* DRAW CIRCLE ON STARTING POINT AND RENDER */
 
 const startCell = stage.getRandomCell(1);
 
@@ -63,6 +63,8 @@ const circle = new Circle({
     radius: Math.floor(stage.pixelSize*0.45),
 })
 // console.log(circle);
+stage.addInaccessible(startCell);
+stage.render2D(ctx);
 circle.draw(ctx);
 
 /* SELECT END POINT AND FLOW */
@@ -72,13 +74,15 @@ let moving = false;
 
 canvas.addEventListener('pointerdown', (event) => {
     if (!moving) {
-        endCell = vectorToCell(stage, {
+        let newEndCell = vectorToCell(stage, {
             x: event.clientX,
             y: event.clientY
         });
-        
-        if (endCell && stage.matrix[endCell.row][endCell.col] === 1) {
+
+        if (newEndCell && stage.matrix[newEndCell.row][newEndCell.col] === 1) {
             moving = true;
+            endCell = newEndCell;
+
             stage.flowFieldTo(endCell.row, endCell.col);
             animateFlow();
             MainLoop.start();
@@ -102,7 +106,7 @@ const animateFlow = () => {
         tweens.create({
             from: 0,
             to: 1,
-            dur: distance * 10,
+            dur: distance * 4,
             ease: 'linear',
             animate: progress => {
                 circle.pos = tweenStart.clone().lerp(tweenEnd, progress);
