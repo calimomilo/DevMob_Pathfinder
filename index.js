@@ -78,9 +78,6 @@ canvas.addEventListener('pointerdown', (event) => {
         });
         
         if (endCell && stage.matrix[endCell.row][endCell.col] === 1) {
-            // stage.render2D(ctx);
-            // circle.draw(ctx);
-            // stage.drawCell(ctx, endCell.row, endCell.col, '#db0202');
             moving = true;
             stage.flowFieldTo(endCell.row, endCell.col);
             animateFlow();
@@ -96,20 +93,25 @@ const tweens = new Tweens();
 const animateFlow = () => {
     const tweenStart = circle.pos;
     const nextCell = stage.getFlowMap()[vectorToCell(stage, tweenStart).row][vectorToCell(stage, tweenStart).col];
-    const tweenEnd = cellToVector(stage, nextCell);
-    const distance = tweenEnd.clone().add(tweenStart.clone().multiply(-1)).length();
 
-    // console.log(tweenStart, tweenEnd, distance, (distance * 10))
-    tweens.create({
-        from: 0,
-        to: 1,
-        dur: distance * 10,
-        ease: 'linear',
-        animate: progress => {
-            circle.pos = tweenStart.clone().lerp(tweenEnd, progress);
-        },
-        onComplete: stage.getFlowMap()[nextCell.row][nextCell.col]? animateFlow : () => moving = false
-    });
+    if (nextCell) {
+        const tweenEnd = cellToVector(stage, nextCell);
+        const distance = tweenEnd.clone().add(tweenStart.clone().multiply(-1)).length();
+
+        // console.log(tweenStart, tweenEnd, distance, (distance * 10))
+        tweens.create({
+            from: 0,
+            to: 1,
+            dur: distance * 10,
+            ease: 'linear',
+            animate: progress => {
+                circle.pos = tweenStart.clone().lerp(tweenEnd, progress);
+            },
+            onComplete: animateFlow
+        });
+    } else {
+        moving = false;
+    }
 }
 
 const tickUpdate = (dt) => {
