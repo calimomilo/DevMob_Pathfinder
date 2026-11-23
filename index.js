@@ -76,7 +76,7 @@ canvas.addEventListener('pointerdown', (event) => {
             moving = true;
             endCell = newEndCell;
 
-            stage.flowFieldTo(endCell.row, endCell.col);
+            stage.flowFieldTo({ row: endCell.row, col: endCell.col });
             animateFlow();
             MainLoop.start();
         }
@@ -101,7 +101,7 @@ const animateFlow = () => {
             dur: distance * 5,
             ease: 'linear',
             animate: progress => {
-                circle.getPos() = tweenStart.clone().lerp(tweenEnd, progress);
+                circle.pos = tweenStart.clone().lerp(tweenEnd, progress);
             },
             onComplete: animateFlow
         });
@@ -116,7 +116,7 @@ const tickUpdate = (dt) => {
 
 const tickRender = (t) => {
     stage.render2D(ctx);
-    stage.drawCell(ctx, endCell.row, endCell.col, '#db0202');
+    stage.drawCell(ctx, { row: endCell.row, col: endCell.col }, '#db0202');
     circle.draw(ctx);
 }
 

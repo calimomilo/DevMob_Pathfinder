@@ -15,7 +15,7 @@ export default class AutomatonWithPathfinding extends Automaton {
         this. inaccessibleColor = inaccessibleColor;
     }
 
-    getWalkableNeighbors({row, col}) {
+    getWalkableNeighbors({ row, col }) {
         const indexes = [];
 
         // force check order to get sides before corners
@@ -60,7 +60,7 @@ export default class AutomatonWithPathfinding extends Automaton {
         }
     }
 
-    flowFieldTo(row, col) {
+    flowFieldTo({ row, col }) {
         this.initFlowMap();
         const frontier = [];
         frontier.push({ row, col });
@@ -83,8 +83,8 @@ export default class AutomatonWithPathfinding extends Automaton {
         return this.flowMap ?? [];
     }
 
-    addInaccessible({row, col}) {
-        this.flowFieldTo(row, col);
+    addInaccessible({ row, col }) {
+        this.flowFieldTo({ row: row, col: col });
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j< this.cols; j++) {
                 if (!(i === row && j === col) && !this.flowMap[i][j] && this.matrix[i][j] === 1) {
@@ -97,7 +97,7 @@ export default class AutomatonWithPathfinding extends Automaton {
     render2D(ctx) {
         for (let row = 0; row < this.rows; row++) {
             for (let col = 0; col < this.cols; col++) {
-                this.drawCell(ctx, row, col, this.matrix[row][col] === 1? this.aliveColor : this.matrix[row][col] === -1? this.inaccessibleColor : this.deadColor);               
+                this.drawCell(ctx, { row, col }, this.matrix[row][col] === 1? this.aliveColor : this.matrix[row][col] === -1? this.inaccessibleColor : this.deadColor);               
             }
         }
     }
