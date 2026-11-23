@@ -12,18 +12,18 @@ ctx.canvas.height = ctx.canvas.clientHeight;
 
 const cellToVector = (automaton, cell) => {
     return cell? new Vector2D({
-        x: (cell.col+0.5)*automaton.pixelSize,
-        y: (cell.row+0.5)*automaton.pixelSize
+        x: (cell.col+0.5)*automaton.getPixelSize(),
+        y: (cell.row+0.5)*automaton.getPixelSize()
     }) : null
 }
 
 const vectorToCell = (automaton, vector) => {
     const cell = {
-        row: Math.floor(vector.y / automaton.pixelSize),
-        col: Math.floor(vector.x / automaton.pixelSize)
+        row: Math.floor(vector.y / automaton.getPixelSize()),
+        col: Math.floor(vector.x / automaton.getPixelSize())
     }
 
-    return (cell.row <= automaton.rows && cell.col <= automaton.cols)? cell : null;
+    return (cell.row <= automaton.getRows() && cell.col <= automaton.getCols())? cell : null;
 }
 
 /* GENERATE WORLD */
@@ -34,7 +34,7 @@ const survival = [3, 4, 5, 6, 7, 8];
 const stage = new AutomatonWithPathfinding({
     width: ctx.canvas.width,
     height: ctx.canvas.height,
-    pixelSize: 10,
+    pixelSize: 15,
     freeColor: "hsl(206, 70%, 10%)",
     wallColor: "hsl(118, 44%, 60%)",
     inaccessibleColor: "hsl(205, 18%, 28%)",
@@ -43,14 +43,8 @@ const stage = new AutomatonWithPathfinding({
 });
 
 stage.randomize(0.55);
-// console.log(stage.getAutomaton());
-// stage.render2D(ctx);
 
 for (let i = 0; i < 8; i++) {
-    // setTimeout(() => {
-    //     stage.updateNextGen();
-    //     stage.render2D(ctx);
-    // }, 100*i+300)
     stage.updateNextGen();
 }
 
@@ -60,9 +54,8 @@ const startCell = stage.getRandomCell(1);
 
 const circle = new Circle({
     pos: cellToVector(stage, startCell),
-    radius: Math.floor(stage.pixelSize*0.45),
+    radius: Math.floor(stage.getPixelSize()*0.45),
 })
-// console.log(circle);
 stage.addInaccessible(startCell);
 stage.render2D(ctx);
 circle.draw(ctx);
@@ -79,7 +72,7 @@ canvas.addEventListener('pointerdown', (event) => {
             y: event.clientY
         });
 
-        if (newEndCell && stage.matrix[newEndCell.row][newEndCell.col] === 1) {
+        if (newEndCell && stage.getMatrix()[newEndCell.row][newEndCell.col] === 1) {
             moving = true;
             endCell = newEndCell;
 
@@ -95,21 +88,20 @@ canvas.addEventListener('pointerdown', (event) => {
 const tweens = new Tweens();
 
 const animateFlow = () => {
-    const tweenStart = circle.pos;
+    const tweenStart = circle.getPos();
     const nextCell = stage.getFlowMap()[vectorToCell(stage, tweenStart).row][vectorToCell(stage, tweenStart).col];
 
     if (nextCell) {
         const tweenEnd = cellToVector(stage, nextCell);
         const distance = tweenEnd.clone().add(tweenStart.clone().multiply(-1)).length();
 
-        // console.log(tweenStart, tweenEnd, distance, (distance * 10))
         tweens.create({
             from: 0,
             to: 1,
-            dur: distance * 4,
+            dur: distance * 5,
             ease: 'linear',
             animate: progress => {
-                circle.pos = tweenStart.clone().lerp(tweenEnd, progress);
+                circle.getPos() = tweenStart.clone().lerp(tweenEnd, progress);
             },
             onComplete: animateFlow
         });
@@ -131,17 +123,3 @@ const tickRender = (t) => {
 MainLoop
   .setUpdate(tickUpdate)
   .setDraw(tickRender);
-
-// document.addEventListener('keyup', e => {
-//     const pause = ['KeyP', 'Enter', 'Space']
-
-//     if(pause.includes(e.code)) {
-//         if (MainLoop.isRunning()) {
-//             console.log('stop');
-//             MainLoop.stop();
-//         } else {
-//             console.log('start');
-//             MainLoop.start();
-//         }
-//     }
-// })

@@ -12,6 +12,10 @@ export default class Circle {
         this.color = color;
     }
 
+    getPos() {
+        return this.pos;
+    }
+
     draw(ctx) {
         ctx.beginPath();
         ctx.fillStyle = this.color;

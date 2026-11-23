@@ -38,25 +38,21 @@ export default class Automaton {
 
     }
 
-    // getRows() {
-    //     return this.rows;
-    // }
+    getRows() {
+        return this.rows;
+    }
     
-    // getCols() {
-    //     return this.cols;
-    // }
+    getCols() {
+        return this.cols;
+    }
 
-    // getMatrix() {
-    //     return this.matrix;
-    // }
+    getMatrix() {
+        return this.matrix;
+    }
 
-    // getCell(row, col) {
-    //     return this.matrix[row][col];
-    // }
-
-    // setCell(row, col, val) {
-    //     this.matrix[row][col] = val;
-    // }
+    getPixelSize() {
+        return this.pixelSize;
+    }
 
     randomize(prob) {
         for (let i = 0; i < this.rows; i++) {
