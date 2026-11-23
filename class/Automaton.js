@@ -79,6 +79,8 @@ export default class Automaton {
             for (let col = 0; col < this.cols; col++) {
                 if (Math.random() < prob) {
                     this.matrix[row][col] = 1;
+                } else {
+                    this.matrix[row][col] = 0;
                 }
             }
         }
@@ -149,19 +151,19 @@ export default class Automaton {
         this.matrix = nextGen;
     }
 
-    render2D(ctx) {
-        for (let row = 0; row < this.rows; row++) {
-            for (let col = 0; col < this.cols; col++) {
-                this.drawCell(ctx, { row: row, col: col }, this.matrix[row][col] === 1? this.aliveColor : this.deadColor);               
-            }
-        }
-    }
-
     drawCell(ctx, { row, col }, color) {
         ctx.beginPath();
         ctx.fillStyle = color;
         ctx.rect(col*this.pixelSize, row*this.pixelSize, this.pixelSize, this.pixelSize);
         ctx.fill();
         ctx.closePath();
+    }
+
+    render2D(ctx) {
+        for (let row = 0; row < this.rows; row++) {
+            for (let col = 0; col < this.cols; col++) {
+                this.drawCell(ctx, { row: row, col: col }, this.matrix[row][col] === 1? this.aliveColor : this.deadColor);               
+            }
+        }
     }
 }
